@@ -11,21 +11,28 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Hello World API",
+      title: "Art Arena API",
       version: "1.0.0",
       description: "A simple Express Hello World API",
     },
     servers: [
       {
+        // get url that is used in
+
         url: `http://localhost:${port}`,
+      },
+      {
+        url: "https://artarena.onrender.com/",
       },
     ],
   },
-  apis: ["./index.js"],
+  apis: ["./Routes/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use("/api/users", require("./Routes/users"));
 
 /**
  * @swagger
