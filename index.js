@@ -39,7 +39,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
  */
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  // redirect to api-docs
+  res.redirect("/api-docs");
 });
 
 app.listen(port, () => {
