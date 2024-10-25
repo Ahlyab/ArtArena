@@ -50,7 +50,7 @@ UserSchema.statics.signup = async function (
   });
 };
 
-UserSchema.statics.login = async function (email, password) {
+UserSchema.statics.login = async function (email, password, user_type) {
   if (!email || !password) {
     throw Error("All fields must be filled");
   }
@@ -59,6 +59,15 @@ UserSchema.statics.login = async function (email, password) {
 
   if (!user) {
     throw Error("Incorrect email");
+  }
+
+  // check if user_type is not freelancer, client or admin
+  if (
+    user.user_type !== "freelancer" &&
+    user.user_type !== "client" &&
+    user.user_type !== "admin"
+  ) {
+    throw Error("User type is invalid");
   }
 
   const match = await bcrypt.compare(password, user.password);

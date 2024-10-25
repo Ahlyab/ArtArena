@@ -1,4 +1,7 @@
 const { User } = require("../Model/User");
+const jwt = require("jsonwebtoken");
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 module.exports.user_signup = async (req, res) => {
   // check if first name, last name, email, and password are provided one by one
@@ -45,6 +48,52 @@ module.exports.user_signup = async (req, res) => {
     return res
       .status(201)
       .json({ message: "User created successfully", user, status: 200 });
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+};
+
+module.exports.user_login = async (req, res) => {
+  const { email, password, user_type } = req.body;
+
+  // check each if email, password, and user type are provided
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+  if (!password) {
+    return res.status(400).json({ message: "Password is required" });
+  }
+  if (!user_type) {
+    return res.status(400).json({ message: "User type is required" });
+  }
+
+  try {
+    // login user
+    const user = await User.login(email, password, user_type);
+    // remove password from user object
+    user.password = undefined;
+
+    // Create JWT token
+    const token = jwt.sign(
+      { id: user._id, email: user.email, user_type: user.user_type },
+      JWT_SECRET,
+      { expiresIn: "1d" } // token expiration time
+    );
+
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+
+    // Set token in HttpOnly cookie
+    res.cookie("token", token, {
+      httpOnly: true, // prevent client-side access to the cookie
+      secure: process.env.NODE_ENV === "production" ? true : false, // use secure cookies in production
+      maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
+    });
+
+    console.log(process.env.NODE_ENV);
+
+    return res
+      .status(200)
+      .json({ message: "User logged in successfully", user, status: 200 });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
