@@ -54,7 +54,7 @@ module.exports.user_signup = async (req, res) => {
 };
 
 module.exports.user_login = async (req, res) => {
-  const { email, password, user_type } = req.body;
+  const { email, password } = req.body;
 
   // check each if email, password, and user type are provided
   if (!email) {
@@ -63,13 +63,10 @@ module.exports.user_login = async (req, res) => {
   if (!password) {
     return res.status(400).json({ message: "Password is required" });
   }
-  if (!user_type) {
-    return res.status(400).json({ message: "User type is required" });
-  }
 
   try {
     // login user
-    const user = await User.login(email, password, user_type);
+    const user = await User.login(email, password);
     // remove password from user object
     user.password = undefined;
 
@@ -97,4 +94,9 @@ module.exports.user_login = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
+};
+
+module.exports.user_signout = async (req, res) => {
+  res.clearCookie("token");
+  return res.status(200).json({ message: "User signed out successfully" });
 };

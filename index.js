@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 const users = require("./Routes/users");
 const authMiddleware = require("./Middleware/AuthMiddleware");
 const cookieParser = require("cookie-parser");
+const adminValidator = require("./Middleware/adminMiddleware");
 const port = process.env.PORT || 3000; // Use port from env or default to 3000
 
 const options = {
@@ -49,6 +50,12 @@ app.get("/", (req, res) => {
 app.get("/protected", authMiddleware, (req, res) => {
   res.json({ message: "This is a protected route" });
 });
+
+// app.use(authMiddleware);
+// // client and freelancer
+
+// app.use(adminValidator);
+// admin routes
 
 mongoose
   .connect(process.env.DB_URL)

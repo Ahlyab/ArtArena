@@ -50,7 +50,7 @@ UserSchema.statics.signup = async function (
   });
 };
 
-UserSchema.statics.login = async function (email, password, user_type) {
+UserSchema.statics.login = async function (email, password) {
   if (!email || !password) {
     throw Error("All fields must be filled");
   }

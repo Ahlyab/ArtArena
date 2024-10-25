@@ -188,3 +188,33 @@
  *                   type: string
  *                   example: Unauthorized
  */
+
+/**
+ * @swagger
+ * /api/users/logout_user:
+ *   post:
+ *     summary: Logout a user
+ *     description: Logout a user by clearing the JWT token in the response cookie.
+ *     tags:
+ *       - users
+ *     responses:
+ *       200:
+ *         description: User logged out successfully
+ *         headers:
+ *           Set-Cookie:
+ *             schema:
+ *               type: string
+ *               example: token=; Path=/; HttpOnly; Max-Age=0
+ *             description: JWT token cleared from the cookie.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User logged out successfully
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ */
