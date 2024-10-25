@@ -5,7 +5,7 @@
  *     summary: Create a new user
  *     description: Create a new user with email, password, first name, last name and user_type
  *     tags:
- *      - users
+ *       - users
  *     requestBody:
  *       required: true
  *       content:
@@ -23,20 +23,16 @@
  *                 type: string
  *                 format: email
  *                 example: johndoe@example.com
- *                 description: The user's unique email address (must be valid and unique)
  *               password:
  *                 type: string
  *                 format: password
  *                 example: Password123!
- *                 description: The user's password (must be strong and secure)
  *               firstName:
  *                 type: string
  *                 example: John
- *                 description: The user's first name (required for personalization)
  *               lastName:
  *                 type: string
  *                 example: Doe
- *                 description: The user's last name (required for proper identification)
  *               user_type:
  *                 type: string
  *                 example: user
@@ -50,5 +46,29 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User created
+ *                   example: User created successfully
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: 671b9f1d45cd34c2e061d4f2
+ *                     firstName:
+ *                       type: string
+ *                       example: John
+ *                     lastName:
+ *                       type: string
+ *                       example: Doe
+ *                     email:
+ *                       type: string
+ *                       example: johndoe2@example.com
+ *                     user_type:
+ *                       type: string
+ *                       example: user
+ *                     __v:
+ *                       type: integer
+ *                       example: 0
+ *                 status:
+ *                   type: integer
+ *                   example: 200
  */
