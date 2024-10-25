@@ -75,7 +75,7 @@
 
 /**
  * @swagger
- * /api/users/login:
+ * /api/users/login_user:
  *   post:
  *     summary: Login an existing user
  *     description: Authenticate a user with email, password, and user_type, and receive a JWT token in the response cookie.
@@ -158,7 +158,7 @@
 
 /**
  * @swagger
- * /api/protected:
+ * /protected:
  *   get:
  *     summary: Access a protected route
  *     description: This endpoint can only be accessed by authenticated users with a valid JWT token in the cookies.
