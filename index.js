@@ -5,6 +5,8 @@ const app = express();
 const swaggerUi = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc");
 const cors = require("cors");
+const mongoose = require("mongoose");
+const users = require("./Routes/users");
 
 const port = process.env.PORT || 3000; // Use port from env or default to 3000
 
@@ -27,32 +29,32 @@ const options = {
       },
     ],
   },
-  apis: ["./Routes/*.js"],
+  apis: ["./docs/*.js"],
 };
 
 app.use(cors());
+app.use(express.json());
 
 const swaggerSpec = swaggerJSDoc(options);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.use("/api/users", require("./Routes/users"));
-
-/**
- * @swagger
- * /:
- *  get:
- *    summary: Returns the hello world message
- *    description: Returns the hello world message
- *    responses:
- *      '200':
- *        description: A successful response
- */
+app.use("/api/users", users);
 
 app.get("/", (req, res) => {
-  // redirect to api-docs
   res.redirect("/api-docs");
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+mongoose
+  .connect(process.env.DB_URL)
+  .then(() => {
+    console.log("App connected to database");
+    app.listen(port, () => {
+      console.log(
+        `App is listening to port : ${port} \n http://localhost:${port}`
+      );
+    });
+  })
+  .catch((error) => {
+    console.log("uri : " + process.env.DB_URL);
+    console.log(error);
+  });
