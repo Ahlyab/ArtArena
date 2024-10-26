@@ -56,7 +56,6 @@ module.exports.user_signup = async (req, res) => {
         user_type
       );
     } else if (user_type === "client") {
-      console.log("coming here");
       user = await Client.signup(
         email,
         password,
@@ -88,7 +87,7 @@ module.exports.user_signup = async (req, res) => {
 };
 
 module.exports.user_login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, user_type } = req.body;
 
   // check each if email, password, and user type are provided
   if (!email) {
@@ -100,7 +99,17 @@ module.exports.user_login = async (req, res) => {
 
   try {
     // login user
-    const user = await User.login(email, password);
+
+    let user = null;
+    // create user according to user type
+    if (user_type === "artist") {
+      user = await Artist.login(email, password);
+    } else if (user_type === "client") {
+      user = await Client.login(email, password);
+    } else if (user_type === "admin") {
+      user = await Admin.login(email, password);
+    }
+
     // remove password from user object
     user.password = undefined;
 
@@ -120,11 +129,11 @@ module.exports.user_login = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
     });
 
-    console.log(process.env.NODE_ENV);
-
-    return res
-      .status(200)
-      .json({ message: "User logged in successfully", user, status: 200 });
+    return res.status(200).json({
+      message: `${user.user_type} logged in successfully`,
+      user,
+      status: 200,
+    });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
