@@ -1,3 +1,6 @@
+const Admin = require("../Model/Admin");
+const Artist = require("../Model/Artist");
+const Client = require("../Model/Client");
 const { User } = require("../Model/User");
 const jwt = require("jsonwebtoken");
 
@@ -33,22 +36,53 @@ module.exports.user_signup = async (req, res) => {
     return res.status(400).json({ message: "Password is weak" });
   }
 
+  if (
+    user_type !== "artist" &&
+    user_type !== "client" &&
+    user_type !== "admin"
+  ) {
+    return res.status(400).json({ message: "User type is invalid" });
+  }
+
   try {
-    // create user
-    const user = await User.signup(
-      firstName,
-      lastName,
-      email,
-      password,
-      user_type
-    );
+    let user = null;
+    // create user according to user type
+    if (user_type === "artist") {
+      user = await Artist.signup(
+        email,
+        password,
+        firstName,
+        lastName,
+        user_type
+      );
+    } else if (user_type === "client") {
+      console.log("coming here");
+      user = await Client.signup(
+        email,
+        password,
+        firstName,
+        lastName,
+        user_type
+      );
+    } else if (user_type === "admin") {
+      user = await Admin.signup(
+        email,
+        password,
+        firstName,
+        lastName,
+        user_type
+      );
+    }
     // remove password from user object
     user.password = undefined;
 
-    return res
-      .status(201)
-      .json({ message: "User created successfully", user, status: 200 });
+    return res.status(201).json({
+      message: `${user_type} created successfully`,
+      user,
+      status: 200,
+    });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({ message: error.message });
   }
 };

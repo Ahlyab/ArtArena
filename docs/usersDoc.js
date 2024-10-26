@@ -3,7 +3,7 @@
  * /api/users/signup_user:
  *   post:
  *     summary: Create a new user
- *     description: Create a new user with email, password, first name, last name and user_type
+ *     description: Create a new user with email, password, first name, last name and user_type (admin, client, artist)
  *     tags:
  *       - users
  *     requestBody:
@@ -35,7 +35,7 @@
  *                 example: Doe
  *               user_type:
  *                 type: string
- *                 example: user
+ *                 example: client
  *     responses:
  *       200:
  *         description: User created successfully
@@ -46,7 +46,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User created successfully
+ *                   example: client created successfully
  *                 user:
  *                   type: object
  *                   properties:
