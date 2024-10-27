@@ -22,7 +22,7 @@ const options = {
     info: {
       title: "Art Arena API",
       version: "1.0.0",
-      description: "A simple Express Hello World API",
+      description: "Art Arena API Documentation",
     },
     servers: [
       {
