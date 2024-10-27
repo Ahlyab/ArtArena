@@ -5,7 +5,7 @@
  *     summary: Create a new user
  *     description: Create a new user with email, password, first name, last name and user_type (admin, client, artist)
  *     tags:
- *       - users
+ *       - Users
  *     requestBody:
  *       required: true
  *       content:
@@ -80,7 +80,7 @@
  *     summary: Login an existing user
  *     description: Authenticate a user with email, password, and user_type, and receive a JWT token in the response cookie.
  *     tags:
- *       - users
+ *       - Users
  *     requestBody:
  *       required: true
  *       content:
@@ -196,7 +196,7 @@
  *     summary: Logout a user
  *     description: Logout a user by clearing the JWT token in the response cookie.
  *     tags:
- *       - users
+ *       - Users
  *     responses:
  *       200:
  *         description: User logged out successfully

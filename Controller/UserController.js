@@ -135,7 +135,7 @@ module.exports.user_login = async (req, res) => {
       status: 200,
     });
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message, status: 400 });
   }
 };
 

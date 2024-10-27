@@ -10,6 +10,9 @@ const users = require("./Routes/users");
 const authMiddleware = require("./Middleware/AuthMiddleware");
 const cookieParser = require("cookie-parser");
 const adminValidator = require("./Middleware/adminMiddleware");
+const Artist = require("./Model/Artist");
+const ArtistRoutes = require("./Routes/ArtistOperations");
+const ClientRoutes = require("./Routes/ClientOperations");
 const port = process.env.PORT || 3000; // Use port from env or default to 3000
 
 const options = {
@@ -52,7 +55,9 @@ app.get("/protected", authMiddleware, (req, res) => {
 });
 
 // app.use(authMiddleware);
-// // client and freelancer
+
+app.use("/api/artist", ArtistRoutes);
+app.use("/api/client", ClientRoutes);
 
 // app.use(adminValidator);
 // admin routes
