@@ -13,6 +13,7 @@ const adminValidator = require("./Middleware/adminMiddleware");
 const Artist = require("./Model/Artist");
 const ArtistRoutes = require("./Routes/ArtistOperations");
 const ClientRoutes = require("./Routes/ClientOperations");
+const ArtRoutes = require("./Routes/ArtOperations");
 const port = process.env.PORT || 3000; // Use port from env or default to 3000
 
 const options = {
@@ -58,6 +59,7 @@ app.get("/protected", authMiddleware, (req, res) => {
 
 app.use("/api/artist", ArtistRoutes);
 app.use("/api/client", ClientRoutes);
+app.use("/api/art", ArtRoutes);
 
 // app.use(adminValidator);
 // admin routes
