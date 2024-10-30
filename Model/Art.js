@@ -1,53 +1,35 @@
-// Art : title, price, description, type, size, artist, image, sold
-
 const mongoose = require("mongoose");
 
 const ArtSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  type: {
-    type: String,
-    required: true,
-  },
-  size: {
-    type: String,
-    required: true,
-  },
-  artist: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Artist",
-  },
-  image: {
-    type: String,
-    required: true,
-  },
-  sold: {
-    type: Boolean,
-    default: false,
-  },
+  title: { type: String, required: true },
+  price: { type: Number, required: true },
+  description: { type: String, required: true },
+  type: { type: String, required: true },
+  size: { type: String, required: true },
+  artist: { type: mongoose.Schema.Types.ObjectId, ref: "Artist" },
+  image: { type: String, required: true },
+  sold: { type: Boolean, default: false },
 });
 
+// Mark an art as sold
 ArtSchema.statics.sell = async function (artId) {
-  return await this.findByIdAndUpdate(artId, { sold: true }).populate("artist");
+  return await this.findByIdAndUpdate(
+    artId,
+    { sold: true },
+    { new: true }
+  ).populate("artist");
 };
 
+// Mark an art as unsold
 ArtSchema.statics.buy = async function (artId) {
-  return await this.findByIdAndUpdate(artId, { sold: false }).populate(
-    "artist"
-  );
+  return await this.findByIdAndUpdate(
+    artId,
+    { sold: false },
+    { new: true }
+  ).populate("artist");
 };
 
-// add a method to the schema to update the art
+// Update art details
 ArtSchema.statics.updateArt = async function (
   artId,
   title,
@@ -57,22 +39,19 @@ ArtSchema.statics.updateArt = async function (
   size,
   image
 ) {
-  return await this.findByIdAndUpdate(artId, {
-    title,
-    price,
-    description,
-    type,
-    size,
-    image,
-  }).populate("artist");
+  return await this.findByIdAndUpdate(
+    artId,
+    { title, price, description, type, size, image },
+    { new: true }
+  ).populate("artist");
 };
 
-// add a method to the schema to delete the art
+// Delete an art piece
 ArtSchema.statics.deleteArt = async function (artId) {
   return await this.findByIdAndDelete(artId);
 };
 
-// add a method to the schema to add a new art
+// Add a new art piece
 ArtSchema.statics.addArt = async function (
   title,
   price,
@@ -90,20 +69,20 @@ ArtSchema.statics.addArt = async function (
     size,
     artist,
     image,
-  }).populate("artist");
+  });
 };
 
-// add a method to the schema to get all arts
+// Retrieve all art pieces with artist details populated
 ArtSchema.statics.getArts = async function () {
   return await this.find().populate("artist");
 };
 
-// add a method to the schema to get all arts by artist
+// Retrieve all art pieces by a specific artist
 ArtSchema.statics.getArtsByArtist = async function (artistId) {
   return await this.find({ artist: artistId }).populate("artist");
 };
 
-// add a method to the schema to get all arts by recent
+// Retrieve recent art pieces sorted by newest first
 ArtSchema.statics.getRecentArts = async function () {
   return await this.find().populate("artist").sort({ _id: -1 }).limit(8);
 };
