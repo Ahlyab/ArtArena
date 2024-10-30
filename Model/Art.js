@@ -38,11 +38,13 @@ const ArtSchema = new mongoose.Schema({
 });
 
 ArtSchema.statics.sell = async function (artId) {
-  return await this.findByIdAndUpdate(artId, { sold: true });
+  return await this.findByIdAndUpdate(artId, { sold: true }).populate("artist");
 };
 
 ArtSchema.statics.buy = async function (artId) {
-  return await this.findByIdAndUpdate(artId, { sold: false });
+  return await this.findByIdAndUpdate(artId, { sold: false }).populate(
+    "artist"
+  );
 };
 
 // add a method to the schema to update the art
@@ -62,7 +64,7 @@ ArtSchema.statics.updateArt = async function (
     type,
     size,
     image,
-  });
+  }).populate("artist");
 };
 
 // add a method to the schema to delete the art
@@ -88,22 +90,22 @@ ArtSchema.statics.addArt = async function (
     size,
     artist,
     image,
-  });
+  }).populate("artist");
 };
 
 // add a method to the schema to get all arts
 ArtSchema.statics.getArts = async function () {
-  return await this.find();
+  return await this.find().populate("artist");
 };
 
 // add a method to the schema to get all arts by artist
 ArtSchema.statics.getArtsByArtist = async function (artistId) {
-  return await this.find({ artist: artistId });
+  return await this.find({ artist: artistId }).populate("artist");
 };
 
 // add a method to the schema to get all arts by recent
 ArtSchema.statics.getRecentArts = async function () {
-  return await this.find().sort({ _id: -1 }).limit(8);
+  return await this.find().populate("artist").sort({ _id: -1 }).limit(8);
 };
 
 const Art = mongoose.model("Art", ArtSchema);

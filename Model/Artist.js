@@ -107,6 +107,13 @@ ArtistSchema.statics.login = async function (email, password) {
   return artist;
 };
 
+// add art
+ArtistSchema.statics.addArt = async function (artId, artistId) {
+  return await this.findByIdAndUpdate(artistId, {
+    $push: { arts: artId },
+  });
+};
+
 const Artist = mongoose.model("Artist", ArtistSchema);
 
 module.exports = Artist;

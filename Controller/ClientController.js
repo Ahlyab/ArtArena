@@ -3,38 +3,42 @@ const Client = require("../Model/Client");
 module.exports.create_client = async (req, res) => {
   const { email, password, firstName, lastName, user_type } = req.body;
 
-  // check if each value is provided
-
   if (!email) {
-    return res.status(400).json({ message: "Email is required" });
+    return res.status(400).json({ message: "Email is required", status: 400 });
   }
 
   if (!password) {
-    return res.status(400).json({ message: "Password is required" });
+    return res
+      .status(400)
+      .json({ message: "Password is required", status: 400 });
   }
 
   if (!firstName) {
-    return res.status(400).json({ message: "First name is required" });
+    return res
+      .status(400)
+      .json({ message: "First name is required", status: 400 });
   }
 
   if (!lastName) {
-    return res.status(400).json({ message: "Last name is required" });
+    return res
+      .status(400)
+      .json({ message: "Last name is required", status: 400 });
   }
 
   if (!user_type) {
-    return res.status(400).json({ message: "User type is required" });
+    return res
+      .status(400)
+      .json({ message: "User type is required", status: 400 });
   }
 
-  // check if email is valid
   const emailRegex = /\S+@\S+\.\S+/;
   if (!emailRegex.test(email)) {
-    return res.status(400).json({ message: "Email is invalid" });
+    return res.status(400).json({ message: "Email is invalid", status: 400 });
   }
 
-  // check if password is strong and secure
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
   if (!passwordRegex.test(password)) {
-    return res.status(400).json({ message: "Password is weak" });
+    return res.status(400).json({ message: "Password is weak", status: 400 });
   }
 
   if (
@@ -42,7 +46,9 @@ module.exports.create_client = async (req, res) => {
     user_type !== "client" &&
     user_type !== "admin"
   ) {
-    return res.status(400).json({ message: "User type is invalid" });
+    return res
+      .status(400)
+      .json({ message: "User type is invalid", status: 400 });
   }
 
   try {
@@ -58,11 +64,11 @@ module.exports.create_client = async (req, res) => {
     return res.status(201).json({
       message: `${user_type} created successfully`,
       client,
-      status: 200,
+      status: 201,
     });
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message, status: 400 });
   }
 };
 
@@ -72,7 +78,7 @@ module.exports.read_clients = async (req, res) => {
     return res.status(200).json({ clients, status: 200 });
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message, status: 400 });
   }
 };
 
@@ -91,23 +97,23 @@ module.exports.update_client = async (req, res) => {
   } = req.body;
 
   if (!id) {
-    return res.status(400).json({ message: "Id is required" });
+    return res.status(400).json({ message: "Id is required", status: 400 });
   }
 
-  // Validate required fields if provided in the request
   if (email && !/\S+@\S+\.\S+/.test(email)) {
-    return res.status(400).json({ message: "Invalid email format" });
+    return res
+      .status(400)
+      .json({ message: "Invalid email format", status: 400 });
   }
 
   if (
     password &&
     !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(password)
   ) {
-    return res.status(400).json({ message: "Password is weak" });
+    return res.status(400).json({ message: "Password is weak", status: 400 });
   }
 
   try {
-    // If a new password is provided, hash it before updating
     let updatedFields = {
       email,
       firstName,
@@ -124,7 +130,6 @@ module.exports.update_client = async (req, res) => {
       updatedFields.password = await bcrypt.hash(password, salt);
     }
 
-    // Remove undefined fields from updatedFields
     Object.keys(updatedFields).forEach(
       (key) => updatedFields[key] === undefined && delete updatedFields[key]
     );
@@ -142,7 +147,7 @@ module.exports.update_client = async (req, res) => {
       .json({ message: "Client updated successfully", client, status: 200 });
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message, status: 400 });
   }
 };
 
@@ -150,15 +155,17 @@ module.exports.delete_client = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.status(400).json({ message: "Id is required" });
+    return res.status(400).json({ message: "Id is required", status: 400 });
   }
 
   try {
     await Client.findByIdAndDelete(id);
-    return res.status(200).json({ message: "Client deleted successfully" });
+    return res
+      .status(200)
+      .json({ message: "Client deleted successfully", status: 200 });
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message, status: 400 });
   }
 };
 
@@ -166,14 +173,17 @@ module.exports.get_client = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.status(400).json({ message: "Id is required" });
+    return res.status(400).json({ message: "Id is required", status: 400 });
   }
 
   try {
     const client = await Client.findById(id);
+    if (!client) {
+      return res.status(404).json({ message: "Client not found", status: 404 });
+    }
     return res.status(200).json({ client, status: 200 });
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message, status: 400 });
   }
 };
