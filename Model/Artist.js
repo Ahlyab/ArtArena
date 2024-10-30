@@ -30,6 +30,7 @@ const ArtistSchema = new mongoose.Schema({
 
   profilePhoto: {
     type: String,
+    default: "https://via.placeholder.com/150",
   },
 
   arts: [
@@ -104,7 +105,7 @@ ArtistSchema.statics.login = async function (email, password) {
     throw Error("Invalid email or password");
   }
 
-  return artist;
+  return artist.populate("arts");
 };
 
 // add art

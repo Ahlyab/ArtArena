@@ -77,7 +77,7 @@ module.exports.get_art = async (req, res) => {
   }
 
   try {
-    const art = await Art.findById(id);
+    const art = await Art.findById(id)?.populate("artist");
     if (!art) {
       return res.status(404).json({ message: "Art not found", status: 404 });
     }
