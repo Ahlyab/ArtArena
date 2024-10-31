@@ -146,7 +146,7 @@ module.exports.update_client = async (req, res) => {
 
     const client = await Client.findByIdAndUpdate(id, updatedFields, {
       new: true,
-    });
+    }).populate("arts");
 
     if (!client) {
       return res.status(404).json({ message: "Client not found", status: 404 });

@@ -150,7 +150,10 @@ module.exports.update_artist = async (req, res) => {
   try {
     const artist = await Artist.findByIdAndUpdate(id, updateFields, {
       new: true,
-    });
+    })
+      .populate("arts")
+      .populate("clients");
+
     if (!artist) {
       return res.status(404).json({ message: "Artist not found", status: 404 });
     }
@@ -158,7 +161,7 @@ module.exports.update_artist = async (req, res) => {
 
     return res.status(200).json({
       message: "Artist updated successfully",
-      artist: artist.populate("arts"),
+      artist: artist,
       status: 200,
     });
   } catch (error) {
