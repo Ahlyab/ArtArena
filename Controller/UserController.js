@@ -7,7 +7,8 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
 
 module.exports.user_signup = async (req, res) => {
-  const { firstName, lastName, email, password, user_type } = req.body;
+  const { firstName, lastName, email, password, user_type, location } =
+    req.body;
 
   if (!firstName) {
     return res
@@ -53,6 +54,12 @@ module.exports.user_signup = async (req, res) => {
       .json({ message: "User type is invalid", status: 400 });
   }
 
+  if (!location) {
+    return res
+      .status(400)
+      .json({ message: "Location is required", status: 400 });
+  }
+
   try {
     let user = null;
     if (user_type === "artist") {
@@ -61,7 +68,8 @@ module.exports.user_signup = async (req, res) => {
         password,
         firstName,
         lastName,
-        user_type
+        user_type,
+        location
       );
     } else if (user_type === "client") {
       user = await Client.signup(
@@ -69,7 +77,8 @@ module.exports.user_signup = async (req, res) => {
         password,
         firstName,
         lastName,
-        user_type
+        user_type,
+        location
       );
     } else if (user_type === "admin") {
       user = await Admin.signup(
