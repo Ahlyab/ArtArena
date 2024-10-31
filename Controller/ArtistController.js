@@ -251,24 +251,10 @@ module.exports.getNearbyArtist = async (req, res) => {
             type: "Point",
             coordinates: [parseFloat(longitude), parseFloat(latitude)],
           },
-          $maxDistance: parseInt(maxDistance, 10) || 20000, // 90km by default
+          // $maxDistance: parseInt(maxDistance, 10) || 20000, // 90km by default
         },
       },
-    });
-
-    console.log({
-      location: {
-        $near: {
-          $geometry: {
-            type: "Point",
-            coordinates: [parseFloat(longitude), parseFloat(latitude)],
-          },
-          $maxDistance: parseInt(maxDistance, 10) || 20000, // 90km by default
-        },
-      },
-    });
-
-    console.log(artists);
+    }).limit(10);
 
     res.status(200).json({ artists, status: 200 });
   } catch (error) {
