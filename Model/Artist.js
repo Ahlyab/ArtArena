@@ -76,7 +76,6 @@ const ArtistSchema = new mongoose.Schema({
   },
 });
 
-ArtistSchema.index({ location: "2dsphere" });
 ArtistSchema.statics.signup = async function (
   email,
   password,
@@ -129,6 +128,8 @@ ArtistSchema.statics.addArt = async function (artId, artistId) {
     $push: { arts: artId },
   });
 };
+
+ArtistSchema.index({ location: "2dsphere" });
 
 const Artist = mongoose.model("Artist", ArtistSchema);
 

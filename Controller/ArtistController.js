@@ -208,3 +208,71 @@ module.exports.get_artist = async (req, res) => {
     return res.status(400).json({ message: error.message, status: 400 });
   }
 };
+
+// module.exports.getNearbyArtist = async (req, res) => {
+//   const { longitude, latitude, maxDistance } = req.query;
+//   console.log(longitude, latitude, maxDistance);
+//   console.log(await Artist.collection.getIndexes());
+
+//   try {
+//     const artists = await Artist.find({
+//       location: {
+//         $near: {
+//           $geometry: {
+//             type: "Point",
+//             coordinates: [31.5392, 74.327654],
+//             // coordinates: [parseFloat(longitude), parseFloat(latitude)],
+//           },
+//           $maxDistance: maxDistance || 10000, // 10km by default
+//         },
+//       },
+//     });
+//     console.log(artists);
+//     res.status(200).json({ artists, status: 200 });
+//   } catch (error) {
+//     res.status(500).json({ error: "Error fetching nearby artists" });
+//   }
+// };
+
+module.exports.getNearbyArtist = async (req, res) => {
+  const { longitude, latitude, maxDistance = 90000 } = req.query; // Default to 10km
+  console.log(longitude, latitude, maxDistance);
+
+  try {
+    // Validate input for safety (optional)
+    if (!longitude || !latitude) {
+      return res.status(400).json({ error: "Missing longitude or latitude" });
+    }
+
+    const artists = await Artist.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [parseFloat(longitude), parseFloat(latitude)],
+          },
+          $maxDistance: parseInt(maxDistance, 10) || 20000, // 90km by default
+        },
+      },
+    });
+
+    console.log({
+      location: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [parseFloat(longitude), parseFloat(latitude)],
+          },
+          $maxDistance: parseInt(maxDistance, 10) || 20000, // 90km by default
+        },
+      },
+    });
+
+    console.log(artists);
+
+    res.status(200).json({ artists, status: 200 });
+  } catch (error) {
+    console.error(error); // Log the actual error for debugging
+    res.status(500).json({ error: "Error fetching nearby artists" });
+  }
+};

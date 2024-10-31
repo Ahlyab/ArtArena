@@ -7,12 +7,14 @@ const {
   update_artist,
   delete_artist,
   get_artist,
+  getNearbyArtist,
 } = require("../Controller/ArtistController");
 
 const router = express.Router();
 
 router.post("/create_artist", create_artist);
 router.get("/get_artists", get_artists);
+router.get("/get_nearby_artists", getNearbyArtist);
 router.put("/update_artist/:id", update_artist);
 router.delete("/delete_artist/:id", delete_artist);
 router.get("/get_artist/:id", get_artist);

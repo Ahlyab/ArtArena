@@ -251,3 +251,57 @@
  *       400:
  *         description: Bad request or artist not found
  */
+
+/**
+ * @swagger
+ * /api/artist/get_nearby_artists:
+ *   get:
+ *     summary: Retrieve a list of nearby artists based on location
+ *     tags: [Artists]
+ *     parameters:
+ *       - in: query
+ *         name: longitude
+ *         schema:
+ *           type: number
+ *         required: true
+ *         description: Longitude of the location
+ *         example: 103.851959
+ *       - in: query
+ *         name: latitude
+ *         schema:
+ *           type: number
+ *         required: true
+ *         description: Latitude of the location
+ *         example: 1.290270
+ *       - in: query
+ *         name: maxDistance
+ *         schema:
+ *           type: integer
+ *           description: Maximum distance in meters to search for artists (default is 10,000 meters)
+ *           example: 5000
+ *     responses:
+ *       200:
+ *         description: List of nearby artists within the specified distance
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 artists:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Artist'
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ *       500:
+ *         description: Server error while fetching nearby artists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error fetching nearby artists
+ */

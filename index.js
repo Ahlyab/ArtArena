@@ -65,7 +65,11 @@ app.use("/api/art", ArtRoutes);
 // admin routes
 
 mongoose
-  .connect(process.env.DB_URL)
+  .connect(
+    process.env.NODE_ENV === "production"
+      ? process.env.DB_URL_LATEST
+      : process.env.DB_URL
+  )
   .then(() => {
     console.log("App connected to database");
     app.listen(port, () => {
