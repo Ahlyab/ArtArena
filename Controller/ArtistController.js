@@ -2,7 +2,8 @@ const Artist = require("../Model/Artist");
 const bcrypt = require("bcrypt");
 
 module.exports.create_artist = async (req, res) => {
-  const { email, password, firstName, lastName, user_type } = req.body;
+  const { email, password, firstName, lastName, user_type, location } =
+    req.body;
 
   if (!email) {
     return res.status(400).json({ message: "Email is required", status: 400 });
@@ -52,13 +53,20 @@ module.exports.create_artist = async (req, res) => {
       .json({ message: "User type is invalid", status: 400 });
   }
 
+  if (!location) {
+    return res
+      .status(400)
+      .json({ message: "Location is required", status: 400 });
+  }
+
   try {
     const artist = await Artist.signup(
       email,
       password,
       firstName,
       lastName,
-      user_type
+      user_type,
+      location
     );
 
     return res.status(201).json({
@@ -96,6 +104,7 @@ module.exports.update_artist = async (req, res) => {
     totalRevenue,
     address,
     clients,
+    location,
   } = req.body;
 
   if (!id) {
@@ -136,6 +145,7 @@ module.exports.update_artist = async (req, res) => {
   if (totalRevenue) updateFields.totalRevenue = totalRevenue;
   if (address) updateFields.address = address;
   if (clients) updateFields.clients = clients;
+  if (location) updateFields.location = location;
 
   try {
     const artist = await Artist.findByIdAndUpdate(id, updateFields, {

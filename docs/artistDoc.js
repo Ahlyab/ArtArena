@@ -10,54 +10,159 @@
  * /api/artist/create_artist:
  *   post:
  *     summary: Create a new artist
- *     description: Create a new artist with the provided details.
  *     tags: [Artists]
- *     consumes:
- *       - application/json
- *     parameters:
- *       - in: body
- *         name: artist
- *         description: Artist object that needs to be created
- *         required: true
- *         schema:
- *           type: object
- *           required:
- *             - email
- *             - password
- *             - firstName
- *             - lastName
- *             - user_type
- *           properties:
- *             email:
- *               type: string
- *               example: "artist@example.com"
- *             password:
- *               type: string
- *               example: "SecurePass123"
- *             firstName:
- *               type: string
- *               example: "John"
- *             lastName:
- *               type: string
- *               example: "Doe"
- *             user_type:
- *               type: string
- *               enum: ["artist", "client", "admin"]
- *               example: "artist"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: Artist's email
+ *                 example: artist@example.com
+ *               password:
+ *                 type: string
+ *                 description: Artist's password (must contain at least one uppercase letter, one lowercase letter, one number, and be 8 characters or longer)
+ *                 example: Password123
+ *               firstName:
+ *                 type: string
+ *                 description: Artist's first name
+ *                 example: John
+ *               lastName:
+ *                 type: string
+ *                 description: Artist's last name
+ *                 example: Doe
+ *               user_type:
+ *                 type: string
+ *                 description: User type (artist, client, or admin)
+ *                 example: artist
+ *               location:
+ *                 type: object
+ *                 properties:
+ *                   type:
+ *                     type: string
+ *                     example: Point
+ *                   coordinates:
+ *                     type: array
+ *                     items:
+ *                       type: number
+ *                     example: [103.851959, 1.290270]
  *     responses:
  *       201:
  *         description: Artist created successfully
- *         schema:
- *           type: object
- *           properties:
- *             message:
- *               type: string
- *               example: "artist created successfully"
- *             artist:
+ *         content:
+ *           application/json:
+ *             schema:
  *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: artist created successfully
+ *                 artist:
+ *                   $ref: '#/components/schemas/Artist'
  *       400:
- *         description: Bad request (missing fields or invalid input)
+ *         description: Bad request (Invalid input or missing required fields)
  */
+
+/**
+ * @swagger
+ * /api/artist/update_artist/{id}:
+ *   put:
+ *     summary: Update an existing artist's information
+ *     tags: [Artists]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Artist ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: Updated email address
+ *                 example: updated_email@example.com
+ *               password:
+ *                 type: string
+ *                 description: Updated password
+ *                 example: NewPassword123
+ *               firstName:
+ *                 type: string
+ *                 description: Updated first name
+ *                 example: Jane
+ *               lastName:
+ *                 type: string
+ *                 description: Updated last name
+ *                 example: Doe
+ *               user_type:
+ *                 type: string
+ *                 description: User type (must be 'artist')
+ *                 example: artist
+ *               profilePhoto:
+ *                 type: string
+ *                 description: URL of profile photo
+ *               arts:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Array of Art IDs associated with the artist
+ *               soldArts:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Array of sold Art IDs associated with the artist
+ *               totalRevenue:
+ *                 type: number
+ *                 description: Artist's total revenue
+ *                 example: 5000
+ *               address:
+ *                 type: string
+ *                 description: Artist's address
+ *                 example: 123 Main Street
+ *               clients:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Array of Client IDs associated with the artist
+ *               location:
+ *                 type: object
+ *                 properties:
+ *                   type:
+ *                     type: string
+ *                     example: Point
+ *                   coordinates:
+ *                     type: array
+ *                     items:
+ *                       type: number
+ *                     example: [103.851959, 1.290270]
+ *     responses:
+ *       200:
+ *         description: Artist updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Artist updated successfully
+ *                 artist:
+ *                   $ref: '#/components/schemas/Artist'
+ *       400:
+ *         description: Bad request (Invalid input or missing required fields)
+ *       404:
+ *         description: Artist not found
+ */
+
+// /-------------------------------------/
 
 /**
  * @swagger
@@ -125,127 +230,6 @@
  *                   type: string
  *       400:
  *         description: Artist not found or error occurred
- */
-
-/**
- * @swagger
- * /api/artist/update_artist/{id}:
- *   put:
- *     summary: Update an artist
- *     description: Update the details of an artist by ID. If an artist with the specified ID does not exist, an error is returned.
- *     tags: [Artists]
- *     consumes:
- *       - application/json
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID of the artist to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - password
- *               - firstName
- *               - lastName
- *               - user_type
- *             properties:
- *               email:
- *                 type: string
- *                 example: "artist@example.com"
- *               password:
- *                 type: string
- *                 example: "NewSecurePass123"
- *               firstName:
- *                 type: string
- *                 example: "Jane"
- *               lastName:
- *                 type: string
- *                 example: "Smith"
- *               user_type:
- *                 type: string
- *                 enum: ["artist", "client", "admin"]
- *                 example: "artist"
- *               profilePhoto:
- *                 type: string
- *                 example: "profile_photo_url.jpg"
- *               arts:
- *                 type: array
- *                 items:
- *                   type: string
- *                 example: ["60d5f483f7aecd3b4c8e4f8d"]
- *               soldArts:
- *                 type: array
- *                 items:
- *                   type: string
- *                 example: ["60d5f483f7aecd3b4c8e4f8e"]
- *               totalRevenue:
- *                 type: number
- *                 example: 1500
- *               address:
- *                 type: string
- *                 example: "123 Art Street, Art City"
- *               clients:
- *                 type: array
- *                 items:
- *                   type: string
- *                 example: ["60d5f483f7aecd3b4c8e4f8f"]
- *     responses:
- *       200:
- *         description: Artist updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Artist updated successfully"
- *                 artist:
- *                   type: object
- *                   properties:
- *                     email:
- *                       type: string
- *                     firstName:
- *                       type: string
- *                     lastName:
- *                       type: string
- *                     user_type:
- *                       type: string
- *                     profilePhoto:
- *                       type: string
- *                     arts:
- *                       type: array
- *                       items:
- *                         type: string
- *                     soldArts:
- *                       type: array
- *                       items:
- *                         type: string
- *                     totalRevenue:
- *                       type: number
- *                     address:
- *                       type: string
- *                     clients:
- *                       type: array
- *                       items:
- *                         type: string
- *       400:
- *         description: Bad request or artist not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Bad request or artist not found"
  */
 
 /**

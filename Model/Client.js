@@ -47,14 +47,29 @@ const ClientSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+
+  location: {
+    type: {
+      type: String, // 'Point' is the only GeoJSON type for geolocation
+      enum: ["Point"],
+      required: true,
+    },
+    coordinates: {
+      type: [Number], // [longitude, latitude]
+      required: true,
+    },
+  },
 });
+
+ClientSchema.index({ location: "2dsphere" });
 
 ClientSchema.statics.signup = async function (
   email,
   password,
   firstName,
   lastName,
-  user_type
+  user_type,
+  location
 ) {
   const exist = await this.findOne({ email });
 
@@ -71,6 +86,7 @@ ClientSchema.statics.signup = async function (
     firstName,
     lastName,
     user_type,
+    location,
   });
 };
 

@@ -1,7 +1,8 @@
 const Client = require("../Model/Client");
 
 module.exports.create_client = async (req, res) => {
-  const { email, password, firstName, lastName, user_type } = req.body;
+  const { email, password, firstName, lastName, user_type, location } =
+    req.body;
 
   if (!email) {
     return res.status(400).json({ message: "Email is required", status: 400 });
@@ -31,6 +32,12 @@ module.exports.create_client = async (req, res) => {
       .json({ message: "User type is required", status: 400 });
   }
 
+  if (!location) {
+    return res
+      .status(400)
+      .json({ message: "Location is required", status: 400 });
+  }
+
   const emailRegex = /\S+@\S+\.\S+/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ message: "Email is invalid", status: 400 });
@@ -57,7 +64,8 @@ module.exports.create_client = async (req, res) => {
       password,
       firstName,
       lastName,
-      user_type
+      user_type,
+      location
     );
     client.password = undefined;
 
@@ -94,6 +102,7 @@ module.exports.update_client = async (req, res) => {
     address,
     bought,
     spentAmount,
+    location,
   } = req.body;
 
   if (!id) {
@@ -123,6 +132,7 @@ module.exports.update_client = async (req, res) => {
       address,
       bought,
       spentAmount,
+      location,
     };
 
     if (password) {

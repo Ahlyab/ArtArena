@@ -1,66 +1,6 @@
 /**
  * @swagger
- * /api/client/create_client:
- *   post:
- *     summary: Create a new client
- *     description: Creates a new client. All required fields must be provided.
- *     tags: [Clients]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 example: "client@example.com"
- *                 description: The email of the client.
- *               password:
- *                 type: string
- *                 example: "StrongPassword123!"
- *                 description: The password of the client (hashed).
- *               firstName:
- *                 type: string
- *                 example: "John"
- *                 description: The first name of the client.
- *               lastName:
- *                 type: string
- *                 example: "Doe"
- *                 description: The last name of the client.
- *               user_type:
- *                 type: string
- *                 enum: [artist, client, admin]
- *                 example: "client"
- *                 description: The user type of the client.
- *     responses:
- *       201:
- *         description: Client created successfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "client created successfully"
- *                 client:
- *                   $ref: '#/definitions/Client'
- *                 status:
- *                   type: number
- *                   example: 200
- *       400:
- *         description: Bad request. Invalid input or missing fields.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Email is required"
-
+ 
  * /api/client/get_clients:
  *   get:
  *     summary: Get all clients
@@ -94,16 +34,15 @@
 
  * /api/client/update_client/{id}:
  *   put:
- *     summary: Update a client
- *     description: Updates an existing client by ID. Only the fields provided in the request body will be updated.
+ *     summary: Update an existing client's information
  *     tags: [Clients]
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
- *         description: The ID of the client to update.
  *         schema:
  *           type: string
+ *         required: true
+ *         description: Client ID
  *     requestBody:
  *       required: true
  *       content:
@@ -113,47 +52,41 @@
  *             properties:
  *               email:
  *                 type: string
- *                 format: email
- *                 example: "client@example.com"
- *                 description: The email of the client.
+ *                 description: Updated email address
+ *                 example: updated_email@example.com
  *               password:
  *                 type: string
- *                 example: "StrongPassword123!"
- *                 description: The password of the client (hashed if provided).
+ *                 description: Updated password
+ *                 example: NewPassword123
  *               firstName:
  *                 type: string
- *                 example: "John"
- *                 description: The first name of the client.
+ *                 description: Updated first name
+ *                 example: Jane
  *               lastName:
  *                 type: string
- *                 example: "Doe"
- *                 description: The last name of the client.
+ *                 description: Updated last name
+ *                 example: Doe
  *               user_type:
  *                 type: string
- *                 enum: [artist, client, admin]
- *                 example: "client"
- *                 description: The user type of the client.
+ *                 description: User type (must be 'client')
+ *                 example: client
  *               profilePhoto:
  *                 type: string
- *                 example: "http://example.com/profile.jpg"
- *                 description: The URL of the client's profile photo.
- *               address:
- *                 type: string
- *                 example: "123 Main St, City, Country"
- *                 description: The address of the client.
- *               bought:
- *                 type: array
- *                 items:
- *                   type: string
- *                   format: ObjectId
- *                 description: The IDs of the art items bought by the client.
- *               spentAmount:
- *                 type: number
- *                 example: 1500
- *                 description: The total amount spent by the client.
+ *                 description: URL of profile photo
+ *               location:
+ *                 type: object
+ *                 properties:
+ *                   type:
+ *                     type: string
+ *                     example: Point
+ *                   coordinates:
+ *                     type: array
+ *                     items:
+ *                       type: number
+ *                     example: [103.851959, 1.290270]
  *     responses:
  *       200:
- *         description: Client updated successfully.
+ *         description: Client updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -161,35 +94,13 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Client updated successfully"
+ *                   example: Client updated successfully
  *                 client:
- *                   $ref: '#/definitions/Client'
- *                 status:
- *                   type: number
- *                   example: 200
+ *                   $ref: '#/components/schemas/Client'
  *       400:
- *         description: Bad request. Invalid input or missing fields.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Invalid email format"
+ *         description: Bad request (Invalid input or missing required fields)
  *       404:
- *         description: Client not found.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Client not found"
- *                 status:
- *                   type: number
- *                   example: 404
+ *         description: Client not found
 
  * /api/client/delete_client/{id}:
  *   delete:
@@ -280,4 +191,65 @@
  *                 message:
  *                   type: string
  *                   example: "Client not found"
+ */
+
+/**
+ * @swagger
+ * /api/client/create_client:
+ *   post:
+ *     summary: Create a new client
+ *     tags: [Clients]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: Client's email
+ *                 example: client@example.com
+ *               password:
+ *                 type: string
+ *                 description: Client's password (must contain at least one uppercase letter, one lowercase letter, one number, and be 8 characters or longer)
+ *                 example: Password123
+ *               firstName:
+ *                 type: string
+ *                 description: Client's first name
+ *                 example: John
+ *               lastName:
+ *                 type: string
+ *                 description: Client's last name
+ *                 example: Doe
+ *               user_type:
+ *                 type: string
+ *                 description: User type (client or admin)
+ *                 example: client
+ *               location:
+ *                 type: object
+ *                 properties:
+ *                   type:
+ *                     type: string
+ *                     example: Point
+ *                   coordinates:
+ *                     type: array
+ *                     items:
+ *                       type: number
+ *                     example: [103.851959, 1.290270]
+ *     responses:
+ *       201:
+ *         description: Client created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: client created successfully
+ *                 client:
+ *                   $ref: '#/components/schemas/Client'
+ *       400:
+ *         description: Bad request (Invalid input or missing required fields)
  */

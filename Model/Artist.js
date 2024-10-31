@@ -63,14 +63,27 @@ const ArtistSchema = new mongoose.Schema({
       ref: "Client",
     },
   ],
+  location: {
+    type: {
+      type: String, // 'Point' is the only GeoJSON type for geolocation
+      enum: ["Point"],
+      required: true,
+    },
+    coordinates: {
+      type: [Number], // [longitude, latitude]
+      required: true,
+    },
+  },
 });
 
+ArtistSchema.index({ location: "2dsphere" });
 ArtistSchema.statics.signup = async function (
   email,
   password,
   firstName,
   lastName,
-  user_type
+  user_type,
+  location
 ) {
   const exist = await this.findOne({ email });
 
@@ -86,6 +99,7 @@ ArtistSchema.statics.signup = async function (
     firstName,
     lastName,
     user_type,
+    location,
   });
 };
 
