@@ -27,10 +27,16 @@ module.exports.create_art = async (req, res) => {
     await Artist.addArt(art._id, artist);
     // notify all clients
     const clients = await Client.find();
+    console.log("clients : ", clients);
     const message = `New art ${title} has been added`;
     const notifications = clients.map((client) => {
-      return Notification.create({ userId: client._id, message });
+      return {
+        message,
+        userId: client._id,
+      };
     });
+
+    await Notification.insertMany(notifications);
 
     notifications.forEach((notification) => {
       io.to(notification.userId.toString()).emit("notification", notification);
