@@ -1,6 +1,7 @@
 const Art = require("../Model/Art");
 const Artist = require("../Model/Artist");
 const Notification = require("../Model/Notification");
+const Client = require("../Model/Client");
 const createSocketInstance = require("../socket");
 module.exports.create_art = async (req, res) => {
   const { title, price, description, type, size, artist, image } = req.body;
