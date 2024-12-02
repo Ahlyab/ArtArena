@@ -31,7 +31,8 @@ const AdminSchema = new mongoose.Schema({
   profilePhoto: {
     type: String,
   },
-});
+  
+}, { timestamps: true});
 
 AdminSchema.statics.signup = async function (
   email,

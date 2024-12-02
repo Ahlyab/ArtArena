@@ -3,65 +3,68 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-const ClientSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-  },
-
-  user_type: {
-    type: String,
-    required: true,
-  },
-
-  profilePhoto: {
-    type: String,
-    default:
-      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-  },
-
-  address: {
-    type: String,
-  },
-
-  bought: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Art",
+const ClientSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
     },
-  ],
-
-  spentAmount: {
-    type: Number,
-    default: 0,
-  },
-
-  location: {
-    type: {
-      type: String, // 'Point' is the only GeoJSON type for geolocation
-      enum: ["Point"],
+    password: {
+      type: String,
       required: true,
     },
-    coordinates: {
-      type: [Number], // [longitude, latitude]
+
+    firstName: {
+      type: String,
       required: true,
     },
+    lastName: {
+      type: String,
+      required: true,
+    },
+
+    user_type: {
+      type: String,
+      required: true,
+    },
+
+    profilePhoto: {
+      type: String,
+      default:
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+    },
+
+    address: {
+      type: String,
+    },
+
+    bought: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Art",
+      },
+    ],
+
+    spentAmount: {
+      type: Number,
+      default: 0,
+    },
+
+    location: {
+      type: {
+        type: String, // 'Point' is the only GeoJSON type for geolocation
+        enum: ["Point"],
+        required: true,
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        required: true,
+      },
+    },
   },
-});
+  { timestamps: true }
+);
 
 ClientSchema.index({ location: "2dsphere" });
 

@@ -1,15 +1,18 @@
 const mongoose = require("mongoose");
 
-const ArtSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: { type: String, required: true },
-  type: { type: String, required: true },
-  size: { type: String, required: true },
-  artist: { type: mongoose.Schema.Types.ObjectId, ref: "Artist" },
-  image: { type: String, required: true },
-  sold: { type: Boolean, default: false },
-});
+const ArtSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true },
+    price: { type: Number, required: true },
+    description: { type: String, required: true },
+    type: { type: String, required: true },
+    size: { type: String, required: true },
+    artist: { type: mongoose.Schema.Types.ObjectId, ref: "Artist" },
+    image: { type: String, required: true },
+    sold: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
 
 // Mark an art as sold
 ArtSchema.statics.sell = async function (artId) {
