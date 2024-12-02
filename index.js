@@ -69,7 +69,7 @@ app.get("/protected", authMiddleware, (req, res) => {
   res.json({ message: "This is a protected route" });
 });
 
-app.use(authMiddleware);
+// app.use(authMiddleware);
 
 app.use("/api/artist", ArtistRoutes);
 app.use("/api/client", ClientRoutes);

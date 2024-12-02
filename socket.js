@@ -1,48 +1,39 @@
-const socketio = require('socket.io');
-
+const socketio = require("socket.io");
+const express = require("express");
+const app = express();
+const server = require("http").createServer(app);
 let ioInstance = null;
 
-module.exports = function createSocketInstance(server) {
-
+module.exports = function createSocketInstance() {
   if (!ioInstance) {
-
     ioInstance = socketio(server); //Now our Websocket is also running on the same server instacne. Socket.io sets up a WebSocket server that runs on the same server instance as the HTTP server. This allows both HTTP and WebSocket protocols to be served by the same server.
 
-    ioInstance.on('connection', (socket) => {
+    ioInstance.on("connection", (socket) => {
+      console.log("A new user connected!");
 
-      console.log('A new user connected!');
-
-      socket.on('UI_CLIENT_ID', (userId) => {
-
+      socket.on("UI_CLIENT_ID", (userId) => {
         console.log(`User ${userId} Listening  to the notifications`);
-        socket.join(userId);//Use socket.join(userId) here to manage user-specific rooms
-        
+        socket.join(userId); //Use socket.join(userId) here to manage user-specific rooms
       });
 
       // Handle other events (e.g., disconnections)
-      socket.on('disconnect', () => {
-
-        console.log('A user disconnected!');
-        
+      socket.on("disconnect", () => {
+        console.log("A user disconnected!");
       });
-
     });
-    
   }
 
   return ioInstance;
-  
 };
 
- 
+server.listen(3001, () => {
+  console.log("Server is running on port 3001");
+});
+
 //  1- We create the createSocketInstance function that takes the server instance as an argument. As it is the default export,
 //   we import it in the main index.js file and pass the server instance as a parameter.
 // 2- Now, in our socket.js file, we get the server instance and pass the same server instance to the socketio library.
 // 3- By doing this, our server and the socket.io run alongside each other.
-
-
-
-
 
 // const socketio = require('socket.io');
 // const messageModel = require('./models/Message.model');
@@ -51,7 +42,7 @@ module.exports = function createSocketInstance(server) {
 // let ioInstance = null;
 
 // module.exports = function createSocketInstance(server) {
-  
+
 //   if (!ioInstance) {
 //     ioInstance = socketio(server); // Now our WebSocket is also running on the same server instance. Socket.io sets up a WebSocket server that runs on the same server instance as the HTTP server. This allows both HTTP and WebSocket protocols to be served by the same server.
 
@@ -73,7 +64,7 @@ module.exports = function createSocketInstance(server) {
 //      // Handle sending messages
 //      socket.on('sendMessage', async (message) => {
 //       const { conversationId, text, senderInfo } = message;
-      
+
 //       try {
 //         // Create and save the message in the database
 //         const newMessage = await messageModel.create({
@@ -100,7 +91,6 @@ module.exports = function createSocketInstance(server) {
 //       }
 
 //     });
-   
 
 //       // Handle disconnections
 //       socket.on('disconnect', () => {
@@ -111,5 +101,3 @@ module.exports = function createSocketInstance(server) {
 
 //   return ioInstance;
 // };
-
-
