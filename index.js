@@ -42,7 +42,16 @@ const options = {
   apis: ["./docs/*.js"],
 };
 
-app.use(cors());
+// app.use(cors());
+
+app.use(
+  cors({
+    origin: "*", //We can pass an Array if we want more than one origins
+    credentials: true, //Telling browser that it's safe to include cookies and other credentials in cross-origin requests to the server.
+    methods: ["GET", "POST", , "PUT", "DELETE", "OPTIONS"],
+  })
+);
+
 app.use(express.json());
 app.use(cookieParser());
 

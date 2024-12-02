@@ -4,7 +4,7 @@ const Notification = require("../Model/Notification");
 const createSocketInstance = require("../socket");
 module.exports.create_art = async (req, res) => {
   const { title, price, description, type, size, artist, image } = req.body;
-  const io = createSocketInstance(server);
+  const io = createSocketInstance();
 
   if (!title || !price || !description || !type || !size || !artist || !image) {
     return res
