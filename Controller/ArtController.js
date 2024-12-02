@@ -1,8 +1,10 @@
 const Art = require("../Model/Art");
 const Artist = require("../Model/Artist");
-
+const Notification = require("../Model/Notification");
+const createSocketInstance = require("../socket");
 module.exports.create_art = async (req, res) => {
   const { title, price, description, type, size, artist, image } = req.body;
+  const io = createSocketInstance(server);
 
   if (!title || !price || !description || !type || !size || !artist || !image) {
     return res
@@ -22,6 +24,17 @@ module.exports.create_art = async (req, res) => {
     );
     // add art to array of art in artist
     await Artist.addArt(art._id, artist);
+    // notify all clients
+    const clients = await Client.find();
+    const message = `New art ${title} has been added`;
+    const notifications = clients.map((client) => {
+      return Notification.create({ userId: client._id, message });
+    });
+
+    notifications.forEach((notification) => {
+      io.to(notification.userId.toString()).emit("notification", notification);
+    });
+
     return res
       .status(200)
       .json({ message: "Art created successfully", art, status: 200 });

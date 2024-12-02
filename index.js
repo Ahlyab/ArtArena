@@ -14,7 +14,11 @@ const Artist = require("./Model/Artist");
 const ArtistRoutes = require("./Routes/ArtistOperations");
 const ClientRoutes = require("./Routes/ClientOperations");
 const ArtRoutes = require("./Routes/ArtOperations");
+const http = require("http");
 const port = process.env.PORT || 3000; // Use port from env or default to 3000
+const server = http.createServer(app);
+const createSocketInstance = require("./socket");
+const io = createSocketInstance(server);
 
 const options = {
   definition: {
