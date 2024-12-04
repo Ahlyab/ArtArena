@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const NotificationSchema = new mongoose.Schema(
   {
-    userId: {
+    recipient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -14,6 +14,21 @@ const NotificationSchema = new mongoose.Schema(
     read: {
       type: Boolean,
       default: false,
+    },
+    sender_id: {
+      type: String,
+    },
+    art_id: {
+      type: String,
+    },
+    avatar: {
+      type: String,
+    },
+    artist_name: {
+      type: String,
+    },
+    art_title: {
+      type: String,
     },
   },
   { timestamps: true }

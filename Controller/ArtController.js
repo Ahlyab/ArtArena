@@ -6,6 +6,7 @@ const createSocketInstance = require("../socket");
 module.exports.create_art = async (req, res) => {
   const { title, price, description, type, size, artist, image } = req.body;
   const io = createSocketInstance();
+  console.log("req comming");
 
   if (!title || !price || !description || !type || !size || !artist || !image) {
     return res
@@ -27,19 +28,31 @@ module.exports.create_art = async (req, res) => {
     await Artist.addArt(art._id, artist);
     // notify all clients
     const clients = await Client.find();
+    // get Artist name and avatar using artistid
+    const artistDetails = await Artist.findById(artist);
     console.log("clients : ", clients);
     const message = `New art ${title} has been added`;
     const notifications = clients.map((client) => {
       return {
         message,
-        userId: client._id,
+        recipient: client._id,
+        read: false,
+        art_title: title,
+        art_id: art._id,
+        sender_id: artist,
+        avatar: artistDetails.profilePhoto,
+        artist_name: artistDetails.firstName + " " + artistDetails.lastName,
       };
     });
 
     await Notification.insertMany(notifications);
+    console.log(notifications);
 
     notifications.forEach((notification) => {
-      io.to(notification.userId.toString()).emit("notification", notification);
+      io.to(notification.recipient.toString()).emit(
+        "notification",
+        notification
+      );
     });
 
     return res
@@ -260,6 +273,30 @@ module.exports.paginate_art = async (req, res) => {
     const arts = await Art.find()
       .skip((page - 1) * limit)
       .limit(limit);
+    return res.status(200).json({ arts, status: 200 });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: error.message, status: 400 });
+  }
+};
+
+// search controller with filter to search by art type, artist name, title, and price
+
+module.exports.search_art_filter = async (req, res) => {
+  const { query, type, artist, title } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ message: "Query is required", status: 400 });
+  }
+
+  try {
+    const arts = await Art.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { type: { $regex: query, $options: "i" } },
+        { artist: { $regex: query, $options: "i" } },
+      ],
+    });
     return res.status(200).json({ arts, status: 200 });
   } catch (error) {
     console.log(error);

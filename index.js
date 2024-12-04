@@ -47,7 +47,7 @@ const options = {
 
 app.use(
   cors({
-    origin: "*", //We can pass an Array if we want more than one origins
+    origin: ["http://localhost:5173", "https://art-arena-tau.vercel.app/"], //We can pass an Array if we want more than one origins
     credentials: true, //Telling browser that it's safe to include cookies and other credentials in cross-origin requests to the server.
     methods: ["GET", "POST", , "PUT", "DELETE", "OPTIONS"],
   })
@@ -69,7 +69,7 @@ app.get("/protected", authMiddleware, (req, res) => {
   res.json({ message: "This is a protected route" });
 });
 
-// app.use(authMiddleware);
+app.use(authMiddleware);
 
 app.use("/api/artist", ArtistRoutes);
 app.use("/api/client", ClientRoutes);
