@@ -16,9 +16,15 @@ const {
   filter_art,
   sort_art,
   paginate_art,
+  advancedSearch,
 } = require("../Controller/ArtController");
+const authenticateToken = require("../Middleware/AuthMiddleware");
 
-// Define routes for Art
+// public route
+router.get("/search", advancedSearch);
+
+// private routes
+router.use(authenticateToken);
 router.post("/create_art", create_art);
 router.get("/get_arts", get_arts);
 router.get("/get_art/:id", get_art);

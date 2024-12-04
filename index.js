@@ -69,11 +69,11 @@ app.get("/protected", authMiddleware, (req, res) => {
   res.json({ message: "This is a protected route" });
 });
 
-app.use(authMiddleware);
+app.use("/api/art", ArtRoutes);
 
+app.use(authMiddleware);
 app.use("/api/artist", ArtistRoutes);
 app.use("/api/client", ClientRoutes);
-app.use("/api/art", ArtRoutes);
 app.use("/api/notifications", NotificationRoutes);
 
 // app.use(adminValidator);

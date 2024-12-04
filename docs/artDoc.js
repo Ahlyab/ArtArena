@@ -348,3 +348,129 @@
  *       400:
  *         description: Bad request
  */
+
+/**
+ * @swagger
+ * /api/art/search:
+ *   get:
+ *     summary: Perform an advanced search on art pieces.
+ *     description: Retrieve art pieces based on search parameters such as title, description, type, artist name, and sorting options, with pagination support.
+ *     tags:
+ *       - Art
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search term to match against the title or description of art pieces (case-insensitive).
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *         description: Filter art pieces by their type (e.g., "Painting", "Sculpture").
+ *       - in: query
+ *         name: artistname
+ *         schema:
+ *           type: string
+ *         description: Search for art pieces by artist name (case-insensitive).
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *           enum: ["1", "-1"]
+ *         description: Sort the results by created date. Use "1" for ascending and "-1" for descending order.
+ *       - in: query
+ *         name: startIndex
+ *         schema:
+ *           type: integer
+ *           default: 0
+ *         description: The index to start fetching results from (for pagination).
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: The maximum number of results to return (for pagination).
+ *     responses:
+ *       200:
+ *         description: Successful response with the list of matching art pieces.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         example: "64fd17e13a4f4a2c1d8b4567"
+ *                       title:
+ *                         type: string
+ *                         example: "Starry Night"
+ *                       price:
+ *                         type: number
+ *                         example: 5000
+ *                       description:
+ *                         type: string
+ *                         example: "A beautiful painting by Vincent van Gogh."
+ *                       type:
+ *                         type: string
+ *                         example: "Painting"
+ *                       size:
+ *                         type: string
+ *                         example: "Medium"
+ *                       artist:
+ *                         type: object
+ *                         properties:
+ *                           _id:
+ *                             type: string
+ *                             example: "64fd17e13a4f4a2c1d8b1234"
+ *                           name:
+ *                             type: string
+ *                             example: "Vincent van Gogh"
+ *                       image:
+ *                         type: string
+ *                         example: "starry-night.jpg"
+ *                       sold:
+ *                         type: boolean
+ *                         example: false
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2024-12-04T10:00:00Z"
+ *                       updatedAt:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2024-12-04T10:00:00Z"
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 20
+ *                     startIndex:
+ *                       type: integer
+ *                       example: 0
+ *                     limit:
+ *                       type: integer
+ *                       example: 10
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Server error"
+ */
