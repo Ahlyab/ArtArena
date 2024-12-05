@@ -45,14 +45,12 @@ module.exports.create_art = async (req, res) => {
       };
     });
 
-    await Notification.insertMany(notifications);
-    console.log(notifications);
+    const response = await Notification.insertMany(notifications);
+
+    console.log("Response", response);
 
     notifications.forEach((notification) => {
-      io.to(notification.recipient.toString()).emit(
-        "notification",
-        notification
-      );
+      io.to(notification.recipient.toString()).emit("notification", response);
     });
 
     return res
@@ -307,7 +305,7 @@ module.exports.search_art_filter = async (req, res) => {
 // Helper function to get artist IDs by name
 const getArtistIdsByName = async (name) => {
   const regex = new RegExp(name, "i"); // Case-insensitive regex
-  const artists = await Artist.find({ name: regex }, "_id"); // Fetch only IDs
+  const artists = await Artist.find({ firstName: regex }, "_id"); // Fetch only IDs
   return artists.map((artist) => artist._id);
 };
 
@@ -347,13 +345,11 @@ module.exports.advancedSearch = async (req, res) => {
         query.artist = { $in: artistIds };
       } else {
         // If no matching artist is found, return an empty result
-        return res
-          .status(200)
-          .json({
-            success: true,
-            data: [],
-            pagination: { total: 0, startIndex: start, limit: pageLimit },
-          });
+        return res.status(200).json({
+          success: true,
+          data: [],
+          pagination: { total: 0, startIndex: start, limit: pageLimit },
+        });
       }
     }
 
@@ -363,7 +359,7 @@ module.exports.advancedSearch = async (req, res) => {
 
     // Fetch arts with pagination
     const arts = await Art.find(query)
-      .populate("artist", "name") // Populate artist's name
+      .populate("artist") // Populate artist's name
       .sort({ [sortField]: sortOrder })
       .skip(start)
       .limit(pageLimit);
