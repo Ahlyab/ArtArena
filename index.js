@@ -15,6 +15,7 @@ const ArtistRoutes = require("./Routes/ArtistOperations");
 const ClientRoutes = require("./Routes/ClientOperations");
 const ArtRoutes = require("./Routes/ArtOperations");
 const NotificationRoutes = require("./Routes/NotificationOperations");
+const MessagesRoutes = require("./Routes/MessageOperations");
 const http = require("http");
 const port = process.env.PORT || 3000; // Use port from env or default to 3000
 const server = http.createServer(app);
@@ -70,6 +71,7 @@ app.get("/protected", authMiddleware, (req, res) => {
 });
 
 app.use("/api/art", ArtRoutes);
+app.use("/api/messages", MessagesRoutes);
 
 app.use(authMiddleware);
 app.use("/api/artist", ArtistRoutes);
