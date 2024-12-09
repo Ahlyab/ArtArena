@@ -32,11 +32,11 @@ const sendMessage = async (req, res) => {
         participants: [
           {
             user: senderId,
-            docModel: senderType == "Artist" ? "Artist" : "Client",
+            docModel: senderType == "artist" ? "artist" : "client",
           },
           {
             user: receiverId,
-            docModel: senderType == "Artist" ? "Client" : "Artist",
+            docModel: senderType == "artist" ? "client" : "artist",
           },
         ],
         messages: [],
@@ -115,20 +115,43 @@ const getUsersForSidebar = async (req, res) => {
     // Find conversations where the logged-in user is a participant
     const conversations = await Conversation.find({
       "participants.user": loggedInUserId,
-    }).populate("participants.user", "-password"); // Populate user data excluding the password
+    }).populate("participants.user messages", "-password"); // Populate user data excluding the password
 
-    // Extract the other participants for the sidebar
-    const users = conversations
-      .map((conversation) => {
-        const otherParticipant = conversation.participants.find(
-          (participant) =>
-            participant.user.toString() !== loggedInUserId.toString()
-        );
-        return otherParticipant ? otherParticipant.user : null;
-      })
-      .filter(Boolean); // Filter out any null values
+    // get last message of conversation
+    const lastMessages = conversations.map((conversation) => {
+      return conversation.messages[conversation.messages.length - 1];
+    });
 
-    res.status(200).json(users);
+    const participants = conversations.map((conversation) => {
+      return {
+        participants: conversation.participants,
+        lastMessages: conversation.messages[conversation.messages.length - 1],
+      };
+    });
+
+    const result = [];
+
+    if (req.user.user_type === "client") {
+      for (let i = 0; i < participants.length; i++) {
+        if (participants[i].participants[0].user !== loggedInUserId) {
+          result.push({
+            participants: participants[i].participants[0],
+            lastMessage: participants[i].lastMessages,
+          });
+        }
+      }
+    } else {
+      for (let i = 0; i < participants.length; i++) {
+        if (participants[i].participants[1].user !== loggedInUserId) {
+          result.push({
+            participants: participants[i].participants[1],
+            lastMessage: participants[i].lastMessages,
+          });
+        }
+      }
+    }
+
+    res.status(200).json(result);
   } catch (error) {
     console.error("Error in getUsersForSidebar:", error);
     res.status(500).json({ message: "Internal Server Error" });
