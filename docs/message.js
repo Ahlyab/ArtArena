@@ -105,3 +105,40 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /api/messages/users:
+ *   get:
+ *     summary: Retrieve a list of users for the sidebar
+ *     tags: [Messages]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of users participating in conversations with the logged-in user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     description: User ID
+ *                   firstName:
+ *                     type: string
+ *                     description: First name of the user
+ *                   lastName:
+ *                     type: string
+ *                     description: Last name of the user
+ *                   email:
+ *                     type: string
+ *                     description: User's email address
+ *                   profilePhoto:
+ *                     type: string
+ *                     description: URL of the user's profile photo
+ *       500:
+ *         description: Internal Server Error
+ */

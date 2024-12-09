@@ -83,4 +83,33 @@ const getMessages = async (req, res) => {
   }
 };
 
-module.exports = { sendMessage, getMessages };
+const getUsersForSidebar = async (req, res) => {
+  try {
+    const loggedInUserId = req.user.id; // Current user's ID
+
+    console.log(loggedInUserId);
+
+    // Find conversations where the logged-in user is a participant
+    const conversations = await Conversation.find({
+      "participants.user": loggedInUserId,
+    }).populate("participants.user", "-password"); // Populate user data excluding the password
+
+    // Extract the other participants for the sidebar
+    const users = conversations
+      .map((conversation) => {
+        const otherParticipant = conversation.participants.find(
+          (participant) =>
+            participant.user.toString() !== loggedInUserId.toString()
+        );
+        return otherParticipant ? otherParticipant.user : null;
+      })
+      .filter(Boolean); // Filter out any null values
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error in getUsersForSidebar:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+module.exports = { sendMessage, getMessages, getUsersForSidebar };
