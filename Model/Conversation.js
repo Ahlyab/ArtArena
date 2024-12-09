@@ -4,9 +4,17 @@ const conversationSchema = new mongoose.Schema(
   {
     participants: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        // participant can be client or artist
-        refPath: "docModel",
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          refPath: "participants.docModel",
+          required: true,
+        },
+
+        docModel: {
+          type: String,
+          required: true,
+          enum: ["Client", "Artist"],
+        },
       },
     ],
     messages: [
@@ -17,11 +25,6 @@ const conversationSchema = new mongoose.Schema(
         default: [],
       },
     ],
-    docModel: {
-      type: String,
-      required: true,
-      enum: ["Client", "Artist"],
-    },
   },
   { timestamps: true }
 );

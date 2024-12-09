@@ -1,22 +1,38 @@
 const Conversation = require("../Model/Conversation.js");
 const Message = require("../Model/Message.js");
+const createSocketInstance = require("../socket.js");
 
 const sendMessage = async (req, res) => {
   try {
     const { id: receiverId } = req.params;
-    const { message } = req.body;
-    const senderId = req.user._id;
+    const { message, receiverType } = req.body; // Added `receiverType` to indicate if the receiver is an Artist or Client
+    const senderId = req.user.id;
+    const senderType = req.user.user_type; // Assuming `req.user` contains a `userType` field indicating "Artist" or "Client"
 
+    console.log("senderId", senderId);
+    // Check for existing conversation
     let conversation = await Conversation.findOne({
-      participants: { $all: [senderId, receiverId] },
+      "participants.user": { $all: [senderId, receiverId] },
     });
 
+    // If no conversation exists, create a new one
     if (!conversation) {
       conversation = await Conversation.create({
-        participants: [senderId, receiverId],
+        participants: [
+          {
+            user: senderId,
+            docModel: senderType == "Artist" ? "Artist" : "Client",
+          },
+          {
+            user: receiverId,
+            docModel: senderType == "Artist" ? "Client" : "Artist",
+          },
+        ],
+        messages: [],
       });
     }
 
+    // Create a new message
     const newMessage = new Message({
       senderId,
       receiverId,
@@ -27,21 +43,17 @@ const sendMessage = async (req, res) => {
       conversation.messages.push(newMessage._id);
     }
 
-    // await newMessage.save();
-    // await conversation.save();
-
-    // optimization
+    // Save both the message and the conversation
     await Promise.all([newMessage.save(), conversation.save()]);
 
-    // SOCKET IO functionality
+    // SOCKET.IO functionality (optional, adjust as needed)
+    const io = createSocketInstance(); // Ensure `createSocketInstance` is implemented correctly
+    io.to(receiverId).emit("newMessage", newMessage);
 
-    if (receiverSocketId) {
-      req.io.to(receiverId).emit("newMessage", newMessage);
-    }
-
+    // Respond with the newly created message
     res.status(201).json(newMessage);
   } catch (error) {
-    console.log("Error in sendMessage", error);
+    console.error("Error in sendMessage:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -49,10 +61,15 @@ const sendMessage = async (req, res) => {
 const getMessages = async (req, res) => {
   try {
     const { id: userToChatId } = req.params;
-    const senderId = req.user._id;
+    const senderId = req.user.id;
 
     const conversation = await Conversation.findOne({
-      participants: { $all: [senderId, userToChatId] },
+      participants: {
+        $all: [
+          { $elemMatch: { user: senderId } },
+          { $elemMatch: { user: userToChatId } },
+        ],
+      },
     }).populate("messages");
 
     if (!conversation) {

@@ -66,10 +66,6 @@ app.get("/", (req, res) => {
   res.redirect("/api-docs");
 });
 
-app.get("/protected", authMiddleware, (req, res) => {
-  res.json({ message: "This is a protected route" });
-});
-
 app.use("/api/art", ArtRoutes);
 app.use("/api/messages", MessagesRoutes);
 

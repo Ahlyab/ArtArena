@@ -2,7 +2,7 @@
  * @swagger
  * tags:
  *   name: Messages
- *   description: Message management API
+ *   description: Message management API for Artists and Clients
  */
 
 /**
@@ -73,8 +73,13 @@
  *               message:
  *                 type: string
  *                 description: Message content
+ *               receiverType:
+ *                 type: string
+ *                 enum: [Artist, Client]
+ *                 description: Specifies the type of the receiver
  *             required:
  *               - message
+ *               - receiverType
  *     responses:
  *       201:
  *         description: Message sent successfully
