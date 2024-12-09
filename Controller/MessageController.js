@@ -5,11 +5,22 @@ const createSocketInstance = require("../socket.js");
 const sendMessage = async (req, res) => {
   try {
     const { id: receiverId } = req.params;
-    const { message, receiverType } = req.body; // Added `receiverType` to indicate if the receiver is an Artist or Client
+    const { message } = req.body; // Added `receiverType` to indicate if the receiver is an Artist or Client
     const senderId = req.user.id;
     const senderType = req.user.user_type; // Assuming `req.user` contains a `userType` field indicating "Artist" or "Client"
 
-    console.log("senderId", senderId);
+    if (!senderId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    if (!receiverId) {
+      return res.status(400).json({ message: "Receiver ID is required" });
+    }
+
+    if (!message) {
+      return res.status(400).json({ message: "Message is required" });
+    }
+
     // Check for existing conversation
     let conversation = await Conversation.findOne({
       "participants.user": { $all: [senderId, receiverId] },
@@ -63,6 +74,14 @@ const getMessages = async (req, res) => {
     const { id: userToChatId } = req.params;
     const senderId = req.user.id;
 
+    if (!senderId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    if (!userToChatId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
     const conversation = await Conversation.findOne({
       participants: {
         $all: [
@@ -88,6 +107,10 @@ const getUsersForSidebar = async (req, res) => {
     const loggedInUserId = req.user.id; // Current user's ID
 
     console.log(loggedInUserId);
+
+    if (!loggedInUserId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
 
     // Find conversations where the logged-in user is a participant
     const conversations = await Conversation.find({
