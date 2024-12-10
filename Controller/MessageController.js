@@ -5,7 +5,7 @@ const createSocketInstance = require("../socket.js");
 const sendMessage = async (req, res) => {
   try {
     const { id: receiverId } = req.params;
-    const { message } = req.body; // Added `receiverType` to indicate if the receiver is an Artist or Client
+    const { message, isImage } = req.body; // Added `receiverType` to indicate if the receiver is an Artist or Client
     const senderId = req.user.id;
     const senderType = req.user.user_type; // Assuming `req.user` contains a `userType` field indicating "Artist" or "Client"
 
@@ -32,14 +32,15 @@ const sendMessage = async (req, res) => {
         participants: [
           {
             user: senderId,
-            docModel: senderType == "artist" ? "artist" : "client",
+            docModel: senderType == "artist" ? "Artist" : "Client",
           },
           {
             user: receiverId,
-            docModel: senderType == "artist" ? "client" : "artist",
+            docModel: senderType == "artist" ? "Client" : "Artist",
           },
         ],
         messages: [],
+        isImage: isImage ? true : false,
       });
     }
 
@@ -48,6 +49,7 @@ const sendMessage = async (req, res) => {
       senderId,
       receiverId,
       message,
+      isImage: isImage ? true : false,
     });
 
     if (newMessage) {
