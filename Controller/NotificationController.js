@@ -1,7 +1,10 @@
+const { create } = require("../Model/Conversation");
 const Notification = require("../Model/Notification");
 module.exports.getNotifications = async (req, res) => {
   try {
-    const notifications = await Notification.find({ recipient: req.user.id });
+    const notifications = await Notification.find({
+      recipient: req.user.id,
+    }).sort({ createdAt: -1 });
     let count = 0;
     notifications.forEach((notification) => {
       if (!notification.read) {

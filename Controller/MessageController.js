@@ -28,6 +28,9 @@ const sendMessage = async (req, res) => {
 
     // If no conversation exists, create a new one
     if (!conversation) {
+      console.log("Sender id: ", senderId);
+      console.log("Receiver id: ", receiverId);
+      console.log("req comming : ", req.user.id);
       conversation = await Conversation.create({
         participants: [
           {
@@ -56,6 +59,10 @@ const sendMessage = async (req, res) => {
       conversation.messages.push(newMessage._id);
     }
 
+    console.log("Sender id: ", senderId);
+    console.log("Receiver id: ", receiverId);
+    console.log("req comming : ", req.user.id);
+
     // Save both the message and the conversation
     await Promise.all([newMessage.save(), conversation.save()]);
 
@@ -63,6 +70,7 @@ const sendMessage = async (req, res) => {
     const io = createSocketInstance(); // Ensure `createSocketInstance` is implemented correctly
     io.to(receiverId).emit("newMessage", newMessage);
 
+    console.log("conversation created : ", conversation);
     // Respond with the newly created message
     res.status(201).json(newMessage);
   } catch (error) {
@@ -108,7 +116,7 @@ const getUsersForSidebar = async (req, res) => {
   try {
     const loggedInUserId = req.user.id; // Current user's ID
 
-    console.log(loggedInUserId);
+    console.log("Logged-in User ID:", loggedInUserId);
 
     if (!loggedInUserId) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -117,41 +125,30 @@ const getUsersForSidebar = async (req, res) => {
     // Find conversations where the logged-in user is a participant
     const conversations = await Conversation.find({
       "participants.user": loggedInUserId,
-    }).populate("participants.user messages", "-password"); // Populate user data excluding the password
-
-    // get last message of conversation
-    const lastMessages = conversations.map((conversation) => {
-      return conversation.messages[conversation.messages.length - 1];
-    });
-
-    const participants = conversations.map((conversation) => {
-      return {
-        participants: conversation.participants,
-        lastMessages: conversation.messages[conversation.messages.length - 1],
-      };
-    });
+    }).populate("participants.user messages", "-password");
 
     const result = [];
 
-    if (req.user.user_type === "client") {
-      for (let i = 0; i < participants.length; i++) {
-        if (participants[i].participants[0].user !== loggedInUserId) {
-          result.push({
-            participants: participants[i].participants[0],
-            lastMessage: participants[i].lastMessages,
-          });
-        }
-      }
-    } else {
-      for (let i = 0; i < participants.length; i++) {
-        if (participants[i].participants[1].user !== loggedInUserId) {
-          result.push({
-            participants: participants[i].participants[1],
-            lastMessage: participants[i].lastMessages,
-          });
-        }
+    for (const conversation of conversations) {
+      const otherParticipant = conversation.participants.find(
+        (participant) => !participant.user._id.equals(loggedInUserId)
+      );
+
+      if (otherParticipant) {
+        const lastMessage =
+          conversation.messages[conversation.messages.length - 1];
+        result.push({
+          participants: otherParticipant,
+          lastMessage,
+        });
       }
     }
+
+    // Sort by last message updatedAt timestamp
+    result.sort(
+      (a, b) =>
+        new Date(b.lastMessage.updatedAt) - new Date(a.lastMessage.updatedAt)
+    );
 
     res.status(200).json(result);
   } catch (error) {
