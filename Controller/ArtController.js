@@ -50,7 +50,14 @@ module.exports.create_art = async (req, res) => {
     console.log("Response", response);
 
     notifications.forEach((notification) => {
-      io.to(notification.recipient.toString()).emit("notification", response);
+      const clientResponse = response.filter(
+        (noti) =>
+          noti.recipient.toString() === notification.recipient.toString()
+      );
+      io.to(notification.recipient.toString()).emit(
+        "notification",
+        clientResponse
+      );
     });
 
     return res
