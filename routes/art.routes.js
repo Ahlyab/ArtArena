@@ -2,23 +2,23 @@ const express = require("express");
 const router = express.Router();
 
 // Import functions from the Art controller
-const {
-  create_art,
-  get_arts,
-  get_arts_by_artist,
-  get_recent_arts,
-  get_art,
-  update_art,
-  delete_art,
-  sell_art,
-  buy_art,
-  search_art,
-  filter_art,
-  sort_art,
-  paginate_art,
-  advancedSearch,
-} = require("../controllers/Art/art.controller");
+
 const authenticateToken = require("../middleware/auth.middleware");
+const {advancedSearch} = require("../controllers/Art/advanced_search");
+const {create_art} = require("../controllers/Art/create_art");
+const {get_arts} = require("../controllers/Art/get_arts");
+const {get_art} = require("../controllers/Art/get_art");
+const {get_arts_by_artist} = require("../controllers/Art/get_arts_by_artist");
+const {get_recent_arts} = require("../controllers/Art/get_recent_arts");
+const {update_art} = require("../controllers/Art/update_art");
+const {delete_art} = require("../controllers/Art/delete_art");
+const {sell_art} = require("../controllers/Art/sell_art");
+const {buy_art} = require("../controllers/Art/buy_art");
+const {search_art} = require("../controllers/Art/search_art");
+const {filter_art} = require("../controllers/Art/filter_art");
+const {sort_art} = require("../controllers/Art/sort_art");
+const {paginate_art} = require("../controllers/Art/paginate_art");
+
 
 // public route
 router.get("/search", advancedSearch);

@@ -1,9 +1,8 @@
 const express = require("express");
+const {getNotifications} = require("../controllers/Notification/get_notification");
+const {updateNotification} = require("../controllers/Notification/update_notification");
 const router = express.Router();
-const {
-  getNotifications,
-  updateNotification,
-} = require("../controllers/Notification/NotificationController");
+
 
 // Define routes for Art
 router.get("/get_notifications", getNotifications);

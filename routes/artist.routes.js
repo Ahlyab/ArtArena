@@ -1,14 +1,13 @@
 // create routes for Artist operations
 
 const express = require("express");
-const {
-  create_artist,
-  get_artists,
-  update_artist,
-  delete_artist,
-  get_artist,
-  getNearbyArtist,
-} = require("../controllers/Artist/artist.controller");
+const {create_artist} = require("../controllers/Artist/create_artist");
+const {get_artists} = require("../controllers/Artist/get_artists");
+const {getNearbyArtist} = require("../controllers/Artist/get_nearby_artist");
+const {update_artist} = require("../controllers/Artist/update_artist");
+const {delete_artist} = require("../controllers/Artist/delete_artist");
+const {get_artist} = require("../controllers/Artist/get_artist");
+
 
 const router = express.Router();
 
