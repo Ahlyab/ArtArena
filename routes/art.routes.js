@@ -17,8 +17,8 @@ const {
   sort_art,
   paginate_art,
   advancedSearch,
-} = require("../Controller/ArtController");
-const authenticateToken = require("../Middleware/AuthMiddleware");
+} = require("../controllers/Art/art.controller");
+const authenticateToken = require("../middleware/auth.middleware");
 
 // public route
 router.get("/search", advancedSearch);

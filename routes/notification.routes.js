@@ -3,7 +3,7 @@ const router = express.Router();
 const {
   getNotifications,
   updateNotification,
-} = require("../Controller/NotificationController");
+} = require("../controllers/Notification/NotificationController");
 
 // Define routes for Art
 router.get("/get_notifications", getNotifications);

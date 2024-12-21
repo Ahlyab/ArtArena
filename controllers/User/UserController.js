@@ -1,7 +1,7 @@
-const Admin = require("../Model/Admin");
-const Artist = require("../Model/Artist");
-const Client = require("../Model/Client");
-const { User } = require("../Model/User");
+const Admin = require("../../models/admin.model");
+const Artist = require("../../models/artist.model");
+const Client = require("../../models/client.model");
+const { User } = require("../../models/user.model");
 const jwt = require("jsonwebtoken");
 
 const JWT_SECRET = process.env.JWT_SECRET;

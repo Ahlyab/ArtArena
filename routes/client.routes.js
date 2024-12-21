@@ -8,7 +8,7 @@ const {
   update_client,
   delete_client,
   get_client,
-} = require("../Controller/ClientController");
+} = require("../controllers/Client/ClientController");
 
 const router = express.Router();
 

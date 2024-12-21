@@ -34,6 +34,6 @@ const NotificationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Notification = mongoose.model("Notification", NotificationSchema);
+const NotificationModel = mongoose.model("Notification", NotificationSchema);
 
-module.exports = Notification;
+module.exports = NotificationModel;

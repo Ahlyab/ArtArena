@@ -1,5 +1,5 @@
-const { create } = require("../Model/Conversation");
-const Notification = require("../Model/Notification");
+const { create } = require("../../models/conversation.model");
+const Notification = require("../../models/notification.model");
 module.exports.getNotifications = async (req, res) => {
   try {
     const notifications = await Notification.find({

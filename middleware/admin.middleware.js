@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-// Middleware to verify JWT
+// middleware to verify JWT
 const adminValidator = (req, res, next) => {
   // req.user
 

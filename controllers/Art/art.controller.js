@@ -1,8 +1,8 @@
-const Art = require("../Model/Art");
-const Artist = require("../Model/Artist");
-const Notification = require("../Model/Notification");
-const Client = require("../Model/Client");
-const createSocketInstance = require("../socket");
+const Art = require("../../models/art.model");
+const Artist = require("../../models/artist.model");
+const Notification = require("../../models/notification.model");
+const Client = require("../../models/client.model");
+const createSocketInstance = require("../../socket");
 module.exports.create_art = async (req, res) => {
   const { title, price, description, type, size, artist, image } = req.body;
   const io = createSocketInstance();

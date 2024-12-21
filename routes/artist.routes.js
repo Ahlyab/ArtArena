@@ -8,7 +8,7 @@ const {
   delete_artist,
   get_artist,
   getNearbyArtist,
-} = require("../Controller/ArtistController");
+} = require("../controllers/Artist/artist.controller");
 
 const router = express.Router();
 

@@ -134,6 +134,6 @@ ArtistSchema.statics.addArt = async function (artId, artistId) {
 
 ArtistSchema.index({ location: "2dsphere" });
 
-const Artist = mongoose.model("Artist", ArtistSchema);
+const ArtistModel = mongoose.model("ArtistModel", ArtistSchema);
 
-module.exports = Artist;
+module.exports = ArtistModel;

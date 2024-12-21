@@ -1,4 +1,4 @@
-const Artist = require("../Model/Artist");
+const Artist = require("../../models/artist.model");
 const bcrypt = require("bcrypt");
 
 module.exports.create_artist = async (req, res) => {

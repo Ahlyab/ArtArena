@@ -2,7 +2,7 @@
 
 ### This repo contains only backend for art arena project
 
-## Art Arena
+## ArtModel Arena
 
 A place where artist can make arts for buyers on demand and sell their arts
 

@@ -1,6 +1,6 @@
-const Conversation = require("../Model/Conversation.js");
-const Message = require("../Model/Message.js");
-const createSocketInstance = require("../socket.js");
+const Conversation = require("../../models/conversation.model.js");
+const Message = require("../../models/message.model.js");
+const createSocketInstance = require("../../socket.js");
 
 const sendMessage = async (req, res) => {
   try {
