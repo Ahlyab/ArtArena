@@ -110,7 +110,7 @@ ArtistSchema.statics.login = async function (email, password) {
     throw Error("All fields must be filled");
   }
 
-  const artist = await this.findOne({ email });
+  const artist = await this.findOne({ email }).populate("arts");
 
   if (!artist) {
     throw Error("Invalid email or password");
@@ -122,7 +122,7 @@ ArtistSchema.statics.login = async function (email, password) {
     throw Error("Invalid email or password");
   }
 
-  return artist.populate("arts");
+  return artist;
 };
 
 // add art
@@ -134,6 +134,6 @@ ArtistSchema.statics.addArt = async function (artId, artistId) {
 
 ArtistSchema.index({ location: "2dsphere" });
 
-const ArtistModel = mongoose.model("ArtistModel", ArtistSchema);
+const ArtistModel = mongoose.model("Artist", ArtistSchema);
 
 module.exports = ArtistModel;

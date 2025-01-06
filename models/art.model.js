@@ -90,6 +90,6 @@ ArtSchema.statics.getRecentArts = async function () {
   return await this.find().populate("artist").sort({ _id: -1 }).limit(8);
 };
 
-const ArtModel = mongoose.model("ArtModel", ArtSchema);
+const ArtModel = mongoose.model("Art", ArtSchema);
 
 module.exports = ArtModel;

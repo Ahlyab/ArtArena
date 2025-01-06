@@ -3,36 +3,38 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-const AdminSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
+const AdminSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
 
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-  },
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
 
-  user_type: {
-    type: String,
-    required: true,
-  },
+    user_type: {
+      type: String,
+      required: true,
+    },
 
-  profilePhoto: {
-    type: String,
+    profilePhoto: {
+      type: String,
+    },
   },
-  
-}, { timestamps: true});
+  { timestamps: true }
+);
 
 AdminSchema.statics.signup = async function (
   email,
@@ -80,6 +82,6 @@ AdminSchema.statics.login = async function (email, password) {
   return admin;
 };
 
-const AdminModel = mongoose.model("AdminModel", AdminSchema);
+const AdminModel = mongoose.model("Admin", AdminSchema);
 
 module.exports = AdminModel;

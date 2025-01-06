@@ -22,6 +22,11 @@ const server = http.createServer(app);
 const createSocketInstance = require("./socket/socket");
 const io = createSocketInstance(server);
 
+// code for setting up morgan
+const morgan = require("morgan");
+const fs = require("fs");
+const path = require("path");
+
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -45,6 +50,32 @@ const options = {
 };
 
 // app.use(cors());
+
+// settting up morgan
+// Ensure the logs directory exists
+const logsDirectory = path.join(__dirname, "logs");
+if (!fs.existsSync(logsDirectory)) {
+  fs.mkdirSync(logsDirectory);
+}
+
+// Create a write stream for the log file
+const logStream = fs.createWriteStream(path.join(logsDirectory, "access.log"), {
+  flags: "a",
+});
+
+// Custom Morgan format function
+morgan.format("custom", (tokens, req, res) => {
+  const timestamp = new Date().toISOString(); // Get current timestamp in ISO format
+  const method = tokens.method(req, res); // HTTP method
+  const route = tokens.url(req, res); // Route
+  const host = req.headers.host; // Host
+
+  return `[${timestamp}] ${method} ${route} ${host}`;
+});
+
+// Setup morgan to log requests to the file
+app.use(morgan("combined", { stream: logStream }));
+app.use(morgan("custom"));
 
 app.use(
   cors({
