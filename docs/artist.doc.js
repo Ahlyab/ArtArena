@@ -143,6 +143,14 @@
  *                     items:
  *                       type: number
  *                     example: [103.851959, 1.290270]
+ *               availableFrom:
+ *                  type: string
+ *                  description: Starting day of availability
+ *                  example: Monday
+ *               availableTo:
+ *                  type: string
+ *                  description: Ending day of availability
+ *                  example: Friday
  *     responses:
  *       200:
  *         description: Artist updated successfully

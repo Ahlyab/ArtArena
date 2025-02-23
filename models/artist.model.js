@@ -75,6 +75,34 @@ const ArtistSchema = new mongoose.Schema(
         required: true,
       },
     },
+
+    // availability attributes
+    availableFrom: {
+      type: String,
+      enum: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      required: true,
+    },
+    availableTo: {
+      type: String,
+      enum: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      required: true,
+    },
   },
   { timestamps: true }
 );
