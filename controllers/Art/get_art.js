@@ -1,6 +1,5 @@
 const Art = require("../../models/art.model");
 
-
 module.exports.get_art = async (req, res) => {
     const { id } = req.params;
 
@@ -9,10 +8,21 @@ module.exports.get_art = async (req, res) => {
     }
 
     try {
-        const art = await Art.findById(id)?.populate("artist");
+        const art = await Art.findById(id)
+        .populate("artist") 
+        .populate({
+            path: "bids",
+            populate: {
+                path: "client",
+                model: "Client", // Ensure the correct model name
+                select: "firstName lastName profilePhoto"
+            }
+        });
+
         if (!art) {
             return res.status(404).json({ message: "Art not found", status: 404 });
         }
+
         return res.status(200).json({ art, status: 200 });
     } catch (error) {
         console.log(error);

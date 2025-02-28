@@ -3,16 +3,31 @@ const mongoose = require("mongoose");
 const ArtSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
-    price: { type: Number, required: true },
+    price: { type: Number,
+      //  required: function () { return !this.isAuction; }
+       },
     description: { type: String, required: true },
     type: { type: String, required: true },
     size: { type: String, required: true },
     artist: { type: mongoose.Schema.Types.ObjectId, ref: "Artist" },
     image: { type: String, required: true },
     sold: { type: Boolean, default: false },
+    isAuction: { type: Boolean, default: false },
+    startingBid: { type: Number, required: function () { return this.isAuction; } },
+    bids: [
+      {
+        client: { type: mongoose.Schema.Types.ObjectId, ref: "Client" },
+        amount: { type: Number, required: true },
+        bidTime: { type: Date, default: Date.now },
+      },
+    ],
+    highestBid: { type: Number, default: 0 },
+    highestBidder: { type: mongoose.Schema.Types.ObjectId, ref: "Client" },
+    auctionEndTime: { type: Date },
   },
   { timestamps: true }
 );
+
 
 // Mark an art as sold
 ArtSchema.statics.sell = async function (artId) {
@@ -55,24 +70,29 @@ ArtSchema.statics.deleteArt = async function (artId) {
 };
 
 // Add a new art piece
-ArtSchema.statics.addArt = async function (
-  title,
-  price,
-  description,
-  type,
-  size,
-  artist,
-  image
-) {
-  return await this.create({
-    title,
-    price,
-    description,
-    type,
-    size,
-    artist,
-    image,
-  });
+// ArtSchema.statics.addArt = async function (
+//   title,
+//   price,
+//   description,
+//   type,
+//   size,
+//   artist,
+//   image
+// ) {
+//   return await this.create({
+//     title,
+//     price,
+//     description,
+//     type,
+//     size,
+//     artist,
+//     image,
+//   });
+// };
+
+
+ArtSchema.statics.addArt = async function (artData) {
+  return await this.create(artData);
 };
 
 // Retrieve all art pieces with artist details populated

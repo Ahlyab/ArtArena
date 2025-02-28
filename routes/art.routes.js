@@ -18,6 +18,8 @@ const {search_art} = require("../controllers/Art/search_art");
 const {filter_art} = require("../controllers/Art/filter_art");
 const {sort_art} = require("../controllers/Art/sort_art");
 const {paginate_art} = require("../controllers/Art/paginate_art");
+const { bid_art } = require("../controllers/Art/bid_art");
+const { close_auction } = require("../controllers/Art/close_auction");
 
 
 // public route
@@ -38,5 +40,8 @@ router.get("/search_art", search_art);
 router.get("/filter_art", filter_art);
 router.get("/sort_art", sort_art);
 router.get("/paginate_art", paginate_art);
+router.put('/bid_art/:artId',bid_art);
+router.put('/close_auction/:artId',close_auction);
+
 
 module.exports = router;
