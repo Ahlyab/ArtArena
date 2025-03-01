@@ -82,7 +82,7 @@ app.use(
   cors({
     origin: ["http://localhost:5173", "https://art-arena-tau.vercel.app"], //We can pass an Array if we want more than one origins
     credentials: true, //Telling browser that it's safe to include cookies and other credentials in cross-origin requests to the server.
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   })
 );
 
@@ -114,8 +114,8 @@ closeExpiredAuctions();
 mongoose
   .connect(
     process.env.NODE_ENV === "production"
-      ? process.env.LOCAL_URL
-      : process.env.LOCAL_URL
+      ? process.env.DB_URL_LATEST
+      : process.env.DB_URL
   )
   .then(() => {
     console.log("App connected to database");
