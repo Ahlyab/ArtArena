@@ -101,7 +101,7 @@ app.get("/", (req, res) => {
 app.use("/api/art", ArtRoutes);
 app.use("/api/messages", MessagesRoutes);
 
-app.use(authMiddleware);
+// app.use(authMiddleware);
 app.use("/api/artist", ArtistRoutes);
 app.use("/api/client", ClientRoutes);
 app.use("/api/notifications", NotificationRoutes);

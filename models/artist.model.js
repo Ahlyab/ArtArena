@@ -68,11 +68,11 @@ const ArtistSchema = new mongoose.Schema(
       type: {
         type: String, // 'Point' is the only GeoJSON type for geolocation
         enum: ["Point"],
-        required: true,
+        required: false,
       },
       coordinates: {
         type: [Number], // [longitude, latitude]
-        required: true,
+        required: false,
       },
     },
 
@@ -88,7 +88,7 @@ const ArtistSchema = new mongoose.Schema(
         "Saturday",
         "Sunday",
       ],
-      required: true,
+      required: false,
     },
     availableTo: {
       type: String,
@@ -101,7 +101,7 @@ const ArtistSchema = new mongoose.Schema(
         "Saturday",
         "Sunday",
       ],
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }
@@ -129,7 +129,6 @@ ArtistSchema.statics.signup = async function (
     firstName,
     lastName,
     user_type,
-    location,
   });
 };
 
